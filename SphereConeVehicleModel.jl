@@ -93,7 +93,7 @@ function entry_vehicle_dynamics!(ẋ,X,u)
     Rot_2_1 = [1 0 0; 0 tan_α_cos_θ -tan_α_sin_θ; 0 tan_α_sin_θ tan_α_cos_θ]
     # Since α ∈ [0, π/2[ we can use atan with one variable, it is differentiable in 0.
     ϵ = 1e-100
-    α = atan(sqrt(V_inf[2]^2 + V_inf[3]^2 + ϵ^2) - ϵ / V_inf[1])
+    α = atan((sqrt(V_inf[2]^2 + V_inf[3]^2 + ϵ^2) - ϵ) / V_inf[1])
     
     # Aerodynamic Forces and Moments in Freestream frame
     C_F2, C_τ2 = aerodynamics_coefficents_chebyshev_tan(α, r_max, r_min, l, x_g)
@@ -117,13 +117,13 @@ function entry_vehicle_dynamics!(ẋ,X,u)
     ẋ[8:10] = - g * x / norm(x)  + (1 / m) * qrot(q, F) #acceleration in world frame
 	#Euler's equation: I*ω + ω x I*ω = constraint_decrease_ratio
     ẋ[11:13] = Jinv * (τ - cross(ω , J * ω))
-    return ẋ, V_inf
+    return ẋ
 end
 
 function entry_vehicle_dynamics(X,u)
 	ẋ = zeros(13,1)
 	entry_vehicle_dynamics!(ẋ,X,u)
-	ẋ
+	return ẋ
 end
 
 if PROGRAM_FILE == @__FILE__ 
