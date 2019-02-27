@@ -1,8 +1,6 @@
 using ApproxFun
 using LinearAlgebra
 using HCubature
-using PyCall
-using PyPlot
 using StaticArrays
 using JLD
 
@@ -399,17 +397,32 @@ function aerodynamics_coefficents_chebyshev_tan(α, r_max, r_min, l, x_g)
 	return C_F2_tan, C_τ2_tan
 end
 
-if PROGRAM_FILE == @__FILE__ 
-	# Parameters
-	r_min = 0.20 # smallest radius of the cone [m]
-	r_max = 1.30 # largest radius of the cone [m]
-	l = 0.55 # length of the cone [m]
-	m = 569.7 # mass of the Phoenix entry system [kg]
-	x_g = -0.152 # axial center-of-gravity location [m]
-	order = 10
-	filename = "chebyshev_coefficients.jld"
-	save_chebyshev_coefficients_tan(r_max, r_min, l, x_g, order, filename)
-	coefficients_tan = load_chebyshev_approximation_tan(filename, r_max, r_min, l, x_g)
-	α = 0.0
-	aerodynamics_coefficents_chebyshev_tan(α, r_max, r_min, l, x_g);
+function aerodynamics_functions_chebyshev_tan(r_max, r_min, l, x_g)
+	coefficients_tan = load_chebyshev_approximation_tan(
+		"chebyshev_coefficients.jld", r_max, r_min, l, x_g)
+	C_X2_coefficients = coefficients_tan[:, 1]
+	C_Y2_tan_coefficients = coefficients_tan[:, 2]
+	C_n2_tan_coefficients = coefficients_tan[:, 3]
+
+	order = size(coefficients_tan)[1]
+	space = Chebyshev(Interval(-pi/2, pi/2))
+	C_X2 = Fun(space, C_X2_coefficients)
+	C_Y2_tan = Fun(space, C_Y2_tan_coefficients)
+	C_n2_tan = Fun(space, C_n2_tan_coefficients)
+	return C_X2, C_Y2_tan, C_n2_tan
 end
+
+# if PROGRAM_FILE == @__FILE__ 
+# 	# Parameters
+# 	r_min = 0.20 # smallest radius of the cone [m]
+# 	r_max = 1.30 # largest radius of the cone [m]
+# 	l = 0.55 # length of the cone [m]
+# 	m = 569.7 # mass of the Phoenix entry system [kg]
+# 	x_g = -0.152 # axial center-of-gravity location [m]
+# 	order = 10
+# 	filename = "chebyshev_coefficients.jld"
+# 	save_chebyshev_coefficients_tan(r_max, r_min, l, x_g, order, filename)
+# 	coefficients_tan = load_chebyshev_approximation_tan(filename, r_max, r_min, l, x_g)
+# 	α = 0.0
+# 	aerodynamics_coefficents_chebyshev_tan(α, r_max, r_min, l, x_g);
+# end

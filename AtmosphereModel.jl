@@ -1,15 +1,17 @@
 using ApproxFun
 using LinearAlgebra
-using PyCall
-using PyPlot
 using JLD
 
 function compute_chebyshev_coefficients_atmosphere_log(height, density, order)
+    # We approximate this data using a Chebyshev polynomial.
+    # Note that an evenly spaced grid suffers from instability for large n.
+    # The easiest way around this is to use least squares with more points than coefficients, 
+    # instead of interpolation:
     altitude_min = height[1]
     altitude_max = height[end]
     num_nodes = size(density)[1]
     space = Chebyshev(Interval(altitude_min, altitude_max))
-    # a non-default grid
+    # A non-default grid
     points = range(altitude_min, stop=altitude_max, length=num_nodes) 
     values = log.(density)
     # Create a Vandermonde matrix by evaluating the basis at the grid
@@ -30,9 +32,9 @@ end
 
 function load_chebyshev_approximation_atmosphere_log(filename)
     file = load(filename)
-#     if altitude_min != file["altitude_min"] || altitude_max != file["altitude_max"]
-#         println("The altitude parameters (min/max) do not correspond to the loaded file.")
-#     end
+    # if altitude_min != file["altitude_min"] || altitude_max != file["altitude_max"]
+    #     println("The altitude parameters (min/max) do not correspond to the loaded file.")
+    # end
     altitude_min = file["altitude_min"]
     altitude_max = file["altitude_max"]
     atmosphere_coefficients = file["atmosphere_coefficients"]
@@ -55,6 +57,7 @@ function compute_atmosphere_density_exp(altitude)
 end
 
 function compute_atmosphere_density_parametric(altitude)
+    # Parametric Model
     temperature = -23.4 - 0.00222 * altitude
     pressure = 0.699 * exp(-0.00009 * altitude)
     ρ_inf = pressure / (0.1921 * (temperature + 273.1))
