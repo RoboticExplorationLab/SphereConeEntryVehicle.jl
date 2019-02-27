@@ -27,3 +27,4 @@ function reaction_control_system(u, params)
 	end   
 	return F_c, τ_c
 end
+
