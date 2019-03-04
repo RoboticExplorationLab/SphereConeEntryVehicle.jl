@@ -351,31 +351,3 @@ end
 
 
 # if PROGRAM_FILE == @__FILE__ 
-# 	X_0 = zeros(13, 1)
-# 	X_0[1:3] = [3.4e6, 0, 0]
-# 	X_0[4:7] = [1, 0, 0, 0]
-# 	X_0[8:10] = [-1, 238, 0]
-# 	X_0[11:13] = [0, 0, 0]
-# 	u_0 = zeros(4, 1)
-# 	println("X_0", X_0)
-# 	println("u_0", u_0)
-# 	println("entry_vehicle_dynamics(X_0,u_0)", entry_vehicle_dynamics(X_0,u_0))
-# end
-
-# params = Dict("r_min" => 0.20, # smallest radius of the cone [m]
-# 			  "r_max" => 1.30, # largest radius of the cone [m]
-#             "δ" => 70 / 360 * 2 * pi, # opening amgle of the cone [rad]
-#             "l" => r_max / tan(δ), # length of the cone [m]			  "m" => 569.7, # mass of the Phoenix entry system [kg]
-# 			  "x_g" => -0.152, # axial center-of-gravity location [m]
-#             "c" => 1.20, # distance between the radial axis and the cluster of thrusters[m]
-# 			  "Jxx" => 293.15, # Phoenix entry system [kg.m^2]
-# 			  "Jyy" => 184, # Phoenix entry system [kg.m^2]
-# 			  "Jzz" => 208.02, # Phoenix entry system [kg.m^2]
-# 			  "Jxy" => 0.451, # Phoenix entry system [kg.m^2]
-# 			  "Jxz" => -4.424, # Phoenix entry system [kg.m^2] 
-# 			  "Jyz" => 0.372, # Phoenix entry system [kg.m^2]
-# 			  "g" => 3.711, # Mars gravity [m^2.s^-1]
-# 			  "h" => 10800, # Atmospheric Scale Height [m]
-# 			  "ρ_0" => 0.020, # Surface density of Mars atmosphere [kg.m^-3]
-# 			  "r_p" => 3389.5e3, # Volumetric mean radius of Mars [m]
-# 			  "ω_p" => [0, 0, 7.088e-05]) # Angular velocity of Mars [rad.s^-1]

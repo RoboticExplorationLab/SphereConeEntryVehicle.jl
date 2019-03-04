@@ -7,6 +7,13 @@ function cross_product_matrix(a)
     return a_mat
 end
 
+function denoising(a)
+    if abs(a) < 1e-6
+        a = 0
+    end
+    return a
+end
+
 function illuminated_aerodynamics(r_max, r_min, l, x_g, ρ_inf, V_inf)
     F_hat, τ_hat = illuminated_integral_aerodynamics(r_max, r_min, l, x_g, ρ_inf, V_inf)
     F_a = ρ_inf * F_hat * kron(V_inf, V_inf)
@@ -39,6 +46,8 @@ function illuminated_integral_aerodynamics(r_max, r_min, l, x_g)
     GS_mat = cross_product_matrix(GS)   
     F_hat = F_hat_cone + F_hat_sphere
     τ_hat = τ_hat_cone + GC_mat * F_hat_cone + τ_hat_sphere + GS_mat * F_hat_sphere
+    F_hat = denoising.(F_hat)
+    τ_hat = denoising.(τ_hat)
     return F_hat, τ_hat
 end
 
