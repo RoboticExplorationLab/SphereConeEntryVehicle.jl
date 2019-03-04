@@ -44,11 +44,10 @@ function mrptodcm(mrp)
          -mrp[2] mrp[1]  0]
     I = diagm(0=>fill(1., 3))
     R = I + (8 * S * S + 4 * (1 - mrp2) * S) / ((1 + mrp2)^2)
-    println(R'R)
     return R
 end
 
-function entry_vehicle_dynamics!(ẋ, X, u, params)
+function entry_vehicle_quat_dynamics!(ẋ, X, u, params)
 	## States: X ∈ R^13; q = [s;v]
 	# x
 	# y
@@ -118,7 +117,7 @@ function entry_vehicle_dynamics!(ẋ, X, u, params)
 	return ẋ
 end
 
-function entry_vehicle_simplified_dynamics!(ẋ, X, u, params)
+function entry_vehicle_quat_simplified_dynamics!(ẋ, X, u, params)
 	## States: X ∈ R^13; q = [s;v]
 	# x
 	# y
@@ -185,7 +184,7 @@ function entry_vehicle_simplified_dynamics!(ẋ, X, u, params)
 	return ẋ
 end
 
-function entry_vehicle_mrp_dynamics!(ẋ, X, u, params)
+function entry_vehicle_dynamics!(ẋ, X, u, params)
     ## States: X ∈ R^12; r = modified Rodrigues parameters
     # x
     # y
@@ -257,7 +256,7 @@ function entry_vehicle_mrp_dynamics!(ẋ, X, u, params)
     return ẋ
 end
 
-function entry_vehicle_mrp_simplified_dynamics!(ẋ, X, u, params)
+function entry_vehicle_simplified_dynamics!(ẋ, X, u, params)
     ## States: X ∈ R^12; r = modified Rodrigues parameters
     # x
     # y
@@ -326,27 +325,27 @@ function entry_vehicle_mrp_simplified_dynamics!(ẋ, X, u, params)
     return ẋ
 end
 
+function entry_vehicle_quat_dynamics(X, u, params)
+	ẋ = zeros(13,1)
+	entry_vehicle_quat_dynamics!(ẋ, X, u, params)
+	return ẋ
+end
+
+function entry_vehicle_quat_simplified_dynamics(X, u, params)
+	ẋ = zeros(13,1)
+	entry_vehicle_quat_simplified_dynamics!(ẋ, X, u, params)
+	return ẋ
+end
+
 function entry_vehicle_dynamics(X, u, params)
-	ẋ = zeros(13,1)
-	entry_vehicle_dynamics!(ẋ, X, u, params)
-	return ẋ
-end
-
-function entry_vehicle_simplified_dynamics(X, u, params)
-	ẋ = zeros(13,1)
-	entry_vehicle_simplified_dynamics!(ẋ, X, u, params)
-	return ẋ
-end
-
-function entry_vehicle_mrp_dynamics(X, u, params)
     ẋ = zeros(13,1)
-    entry_vehicle_mrp_simplified_dynamics!(ẋ, X, u, params)
+    entry_vehicle_simplified_dynamics!(ẋ, X, u, params)
     return ẋ
 end
 
-function entry_vehicle_mrp_simplified_dynamics(X, u, params)
+function entry_vehicle_simplified_dynamics(X, u, params)
     ẋ = zeros(13,1)
-    entry_vehicle_mrp_simplified_dynamics!(ẋ, X, u, params)
+    entry_vehicle_simplified_dynamics!(ẋ, X, u, params)
     return ẋ
 end
 
